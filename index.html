@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Hiệp Sĩ Nhật Ngữ</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+      margin: 0;
+      padding: 20px;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .container {
+      max-width: 900px;
+      width: 100%;
+      margin: auto;
+      padding: 30px;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 20px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+      backdrop-filter: blur(10px);
+    }
+    h1 {
+      text-align: center;
+      color: #d6336c;
+      font-size: 2.5em;
+      margin-bottom: 20px;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+      display: none;
+    }
+    h1.logged-in {
+      display: block;
+    }
+    .profile {
+      display: none;
+      align-items: center;
+      gap: 20px;
+      background: #f9f9f9;
+      padding: 20px;
+      border-radius: 15px;
+      margin-bottom: 30px;
+      transition: transform 0.3s ease;
+    }
+    .profile.logged-in {
+      display: flex;
+    }
+    .profile:hover {
+      transform: translateY(-5px);
+    }
+    .avatar {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+      border: 3px solid #fff;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    }
+    .stats {
+      flex: 1;
+    }
+    .stats p {
+      margin: 8px 0;
+      font-size: 1.1em;
+      color: #333;
+    }
+    .progress-bar {
+      width: 100%;
+      background: #e0e0e0;
+      border-radius: 12px;
+      overflow: hidden;
+      height: 25px;
+      margin-top: 10px;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #ff6b6b, #d6336c);
+      width: 0%;
+      transition: width 0.5s ease-in-out;
+    }
+    .quiz-section {
+      display: none;
+      margin-top: 40px;
+      padding: 20px;
+      background: #f9f9f9;
+      border-radius: 15px;
+    }
+    .quiz-section.logged-in {
+      display: block;
+    }
+    .quiz-section h2 {
+      color: #d6336c;
+      margin-bottom: 15px;
+    }
+    .question {
+      font-size: 1.3em;
+      margin-bottom: 20px;
+      color: #333;
+      font-weight: 500;
+    }
+    .answers button {
+      display: block;
+      width: 100%;
+      margin-bottom: 12px;
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      background: #ff6b6b;
+      color: white;
+      font-size: 1.1em;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .answers button:hover {
+      background: #d6336c;
+      transform: scale(1.02);
+    }
+    .auth-section {
+      margin-top: 40px;
+      padding: 20px;
+      background: #f9f9f9;
+      border-radius: 15px;
+    }
+    .auth-section.logged-in {
+      display: none;
+    }
+    .auth-section h2 {
+      color: #d6336c;
+      margin-bottom: 15px;
+    }
+    input[type="text"], input[type="password"], input[type="email"] {
+      width: 100%;
+      padding: 12px;
+      margin: 8px 0 12px;
+      border-radius: 10px;
+      border: 1px solid #ddd;
+      font-size: 1em;
+      transition: border-color 0.3s ease;
+    }
+    input:focus {
+      outline: none;
+      border-color: #d6336c;
+      box-shadow: 0 0 5px rgba(214, 51, 108, 0.3);
+    }
+    button {
+      padding: 12px 20px;
+      border: none;
+      background: #ff6b6b;
+      color: white;
+      border-radius: 10px;
+      font-size: 1em;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-right: 10px;
+    }
+    button:hover {
+      background: #d6336c;
+      transform: translateY(-2px);
+    }
+    .leaderboard {
+      display: none;
+      margin-top: 40px;
+      padding: 20px;
+      background: #f9f9f9;
+      border-radius: 15px;
+    }
+    .leaderboard.logged-in {
+      display: block;
+    }
+    .leaderboard h2 {
+      color: #d6336c;
+      margin-bottom: 15px;
+    }
+    .leaderboard table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 1em;
+    }
+    .leaderboard th, .leaderboard td {
+      border: 1px solid #ddd;
+      padding: 12px;
+      text-align: left;
+      color: #333;
+    }
+    .leaderboard th {
+      background: #d6336c;
+      color: white;
+    }
+    .leaderboard tr:nth-child(even) {
+      background: #f1f1f1;
+    }
+    @media (max-width: 600px) {
+      .container {
+        padding: 15px;
+      }
+      .profile {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .avatar {
+        width: 80px;
+        height: 80px;
+      }
+      h1 {
+        font-size: 2em;
+      }
+      .question {
+        font-size: 1.1em;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Auth Section -->
+    <div class="auth-section" id="authSection">
+      <h2>🔐 Đăng nhập / Đăng ký</h2>
+      <input type="email" id="email" placeholder="Email" />
+      <input type="password" id="password" placeholder="Mật khẩu" />
+      <button onclick="window.login()">Đăng nhập</button>
+      <button onclick="window.register()">Đăng ký</button>
+    </div>
+
+    <h1 id="mainTitle">🎌 Hiệp Sĩ Nhật Ngữ 🎮</h1>
+
+    <!-- Profile -->
+    <div class="profile" id="profileSection">
+      <div class="avatar" id="avatar"></div>
+      <div class="stats">
+        <p><strong>Biệt danh:</strong> <span id="nickname">Chưa đăng nhập</span></p>
+        <p><strong>Level:</strong> <span id="level">0</span></p>
+        <p><strong>EXP:</strong> <span id="exp">0</span></p>
+        <div class="progress-bar">
+          <div class="progress-bar-fill" id="expBar"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quiz Section -->
+    <div class="quiz-section" id="quizSection">
+      <h2>📚 Câu hỏi tiếng Nhật</h2>
+      <p class="question" id="question">Từ "猫" có nghĩa là gì?</p>
+      <div class="answers">
+        <button onclick="window.submitAnswer('Chó')">Chó</button>
+        <button onclick="window.submitAnswer('Mèo')">Mèo</button>
+        <button onclick="window.submitAnswer('Chuột')">Chuột</button>
+        <button onclick="window.submitAnswer('Cá')">Cá</button>
+      </div>
+    </div>
+
+    <!-- Leaderboard -->
+    <div class="leaderboard" id="leaderboardSection">
+      <h2>🏆 Bảng xếp hạng</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Hạng</th>
+            <th>Người chơi</th>
+            <th>Level</th>
+            <th>EXP</th>
+          </tr>
+        </thead>
+        <tbody id="leaderboard">
+          <!-- Dữ liệu sẽ được thêm bằng JS -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Firebase SDK -->
+  <script type="module">
+    // Firebase config và khởi tạo (sẽ thêm nội dung nếu bạn gửi tiếp)
+  </script>
+
+  <!-- Main Script -->
+  <script type="module">
+    // Check login state on page load
+    window.onload = function() {
+      const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+      updateUI(isLoggedIn);
+    };
+
+    // Update UI based on login state
+    function updateUI(isLoggedIn) {
+      const authSection = document.getElementById('authSection');
+      const mainTitle = document.getElementById('mainTitle');
+      const profileSection = document.getElementById('profileSection');
+      const quizSection = document.getElementById('quizSection');
+      const leaderboardSection = document.getElementById('leaderboardSection');
+
+      if (isLoggedIn) {
+        authSection.classList.add('logged-in');
+        mainTitle.classList.add('logged-in');
+        profileSection.classList.add('logged-in');
+        quizSection.classList.add('logged-in');
+        leaderboardSection.classList.add('logged-in');
+        document.getElementById('nickname').textContent = localStorage.getItem('nickname') || 'Người chơi';
+      } else {
+        authSection.classList.remove('logged-in');
+        mainTitle.classList.remove('logged-in');
+        profileSection.classList.remove('logged-in');
+        quizSection.classList.remove('logged-in');
+        leaderboardSection.classList.remove('logged-in');
+      }
+    }
+
+    // Expose functions to global scope
+    window.submitAnswer = function(answer) {
+      const correct = "Mèo";
+      if (answer === correct) {
+        alert("✅ Chính xác! Bạn nhận được 20 EXP!");
+        // cập nhật exp và level ở đây
+      } else {
+        alert("❌ Sai rồi! Đáp án đúng là 'Mèo'.");
+      }
+    };
+
+    window.login = function() {
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      if (email && password) {
+        // Mock login logic (replace with Firebase Authentication later)
+        localStorage.setItem('isLoggedIn', 'true');
+        localStorage.setItem('nickname', email.split('@')[0]); // Simple nickname from email
+        updateUI(true);
+        alert("Đăng nhập thành công!");
+      } else {
+        alert("Vui lòng nhập email và mật khẩu!");
+      }
+    };
+
+    window.register = function() {
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      if (email && password) {
+        // Mock register logic (replace with Firebase Authentication later)
+        localStorage.setItem('isLoggedIn', 'true');
+        localStorage.setItem('nickname', email.split('@')[0]); // Simple nickname from email
+        updateUI(true);
+        alert("Đăng ký thành công!");
+      } else {
+        alert("Vui lòng nhập email và mật khẩu!");
+      }
+    };
+  </script>
+</body>
+</html>
