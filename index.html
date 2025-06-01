@@ -4,6 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Hiệp Sĩ Nhật Ngữ</title>
+  <!-- Font Awesome CDN for monster icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <style>
     * {
       box-sizing: border-box;
@@ -26,7 +28,7 @@
       background: rgba(255, 255, 255, 0.95);
       border-radius: 20px;
       box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-      backdrop-filter: blur(10px);
+      backdrop-filter: unset;
     }
     h1 {
       text-align: center;
@@ -48,6 +50,7 @@
       border-radius: 15px;
       margin-bottom: 30px;
       transition: transform 0.3s ease;
+      flex-wrap: wrap;
     }
     .profile.logged-in {
       display: flex;
@@ -59,9 +62,14 @@
       width: 100px;
       height: 100px;
       border-radius: 50%;
-      background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
       border: 3px solid #fff;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2em;
+      color: white;
+      position: relative;
     }
     .stats {
       flex: 1;
@@ -85,6 +93,64 @@
       width: 0%;
       transition: width 0.5s ease-in-out;
     }
+    .profile-buttons {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .progress-history {
+      margin-top: 20px;
+    }
+    .progress-history h3 {
+      color: #d6336c;
+      margin-bottom: 15px;
+      font-size: 1.2em;
+    }
+    .history-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9em;
+      color: #333;
+      background: #fff;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+    .history-table th, .history-table td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+    .history-table th {
+      background: #d6336c;
+      color: white;
+      font-weight: 600;
+    }
+    .history-table tr:nth-child(even) {
+      background: #f9f9f9;
+    }
+    .history-table tr:hover {
+      background: #f1f1f1;
+      transform: scale(1.01);
+      transition: all 0.2s ease;
+    }
+    .history-table .monster-icon {
+      font-size: 1.2em;
+      margin-right: 5px;
+    }
+    .history-table .score-progress {
+      background: #e0e0e0;
+      border-radius: 8px;
+      height: 10px;
+      width: 80px;
+      display: inline-block;
+      overflow: hidden;
+    }
+    .history-table .score-progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #28a745, #20c997);
+      transition: width 0.5s ease-in-out;
+    }
     .quiz-section {
       display: none;
       margin-top: 40px;
@@ -99,11 +165,72 @@
       color: #d6336c;
       margin-bottom: 15px;
     }
+    .question-section {
+      margin-bottom: 20px;
+    }
     .question {
       font-size: 1.3em;
       margin-bottom: 20px;
       color: #333;
       font-weight: 500;
+    }
+    .vietnamese {
+      font-size: 1.1em;
+      color: #555;
+      margin-bottom: 10px;
+    }
+    .example {
+      background: #f1f1f1;
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+    }
+    .image-placeholder {
+      margin: 10px 0;
+      text-align: center;
+    }
+    .image-placeholder img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 10px;
+      max-height: 150px;
+    }
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .option {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .option input[type="radio"] {
+      margin: 0;
+    }
+    .option label {
+      font-size: 1.1em;
+      color: #333;
+      cursor: pointer;
+    }
+    .text-input {
+      width: 100%;
+      padding: 12px;
+      margin: 8px 0 12px;
+      border-radius: 10px;
+      border: 1px solid #ddd;
+      font-size: 1em;
+      transition: border-color 0.3s ease;
+    }
+    .text-input:focus {
+      outline: none;
+      border-color: #d6336c;
+      box-shadow: 0 0 5px rgba(214, 51, 108, 0.3);
+    }
+    .answer-feedback {
+      margin-top: 10px;
+      font-size: 1em;
+      color: #d6336c;
     }
     .answers button {
       display: block;
@@ -122,6 +249,31 @@
       background: #d6336c;
       transform: scale(1.02);
     }
+    .quiz-navigation {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+      justify-content: center;
+    }
+    .quiz-navigation button {
+      padding: 12px 20px;
+      border: none;
+      background: #ff6b6b;
+      color: white;
+      border-radius: 10px;
+      font-size: 1em;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .quiz-navigation button:hover {
+      background: #d6336c;
+      transform: translateY(-2px);
+    }
+    .quiz-navigation button:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+      transform: none;
+    }
     .auth-section {
       margin-top: 40px;
       padding: 20px;
@@ -132,6 +284,20 @@
       display: none;
     }
     .auth-section h2 {
+      color: #d6336c;
+      margin-bottom: 15px;
+    }
+    .profile-form {
+      display: none;
+      margin-top: 40px;
+      padding: 20px;
+      background: #f9f9f9;
+      border-radius: 15px;
+    }
+    .profile-form.logged-in {
+      display: block;
+    }
+    .profile-form h2 {
       color: #d6336c;
       margin-bottom: 15px;
     }
@@ -164,6 +330,66 @@
       background: #d6336c;
       transform: translateY(-2px);
     }
+    .monster-section {
+      display: none;
+      margin-top: 40px;
+      padding: 20px;
+      background: #f9f9f9;
+      border-radius: 15px;
+    }
+    .monster-section.active {
+      display: block;
+    }
+    .monster-section h2 {
+      color: #d6336c;
+      margin-bottom: 15px;
+    }
+    .monster-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+      gap: 15px;
+      justify-items: center;
+    }
+    .monster-list a {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 10px;
+      background: #ff6b6b;
+      color: white;
+      text-align: center;
+      border-radius: 10px;
+      text-decoration: none;
+      font-size: 0.9em;
+      transition: all 0.3s ease;
+      width: 100px;
+      height: 120px;
+      justify-content: center;
+    }
+    .monster-list a:hover {
+      background: #d6336c;
+      transform: scale(1.05);
+    }
+    .monster-list a.boss {
+      background: linear-gradient(45deg, #b5179e, #7209b7);
+      box-shadow: 0 0 15px rgba(181, 23, 158, 0.5);
+    }
+    .monster-list a.boss:hover {
+      background: linear-gradient(45deg, #7209b7, #3c096c);
+      box-shadow: 0 0 20px rgba(181, 23, 158, 0.7);
+      transform: scale(1.15);
+    }
+    .monster-list i {
+      font-size: 2em;
+      margin-bottom: 5px;
+    }
+    .monster-list span {
+      font-size: 0.8em;
+    }
+    .monster-list .exp {
+      font-size: 0.7em;
+      margin-top: 5px;
+    }
     .leaderboard {
       display: none;
       margin-top: 40px;
@@ -171,7 +397,7 @@
       background: #f9f9f9;
       border-radius: 15px;
     }
-    .leaderboard.logged-in {
+    .leaderboard.active {
       display: block;
     }
     .leaderboard h2 {
@@ -196,6 +422,94 @@
     .leaderboard tr:nth-child(even) {
       background: #f1f1f1;
     }
+    .exp-notification {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      animation: fadeIn 0.3s ease-in-out;
+    }
+    .exp-notification.active {
+      display: flex;
+    }
+    .exp-notification-content {
+      background: linear-gradient(135deg, #ffffff, #f9f9f9);
+      padding: 30px;
+      border-radius: 20px;
+      max-width: 400px;
+      width: 90%;
+      text-align: center;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+      transform: scale(0.7);
+      animation: zoomIn 0.3s ease-in-out forwards;
+    }
+    .exp-icon {
+      font-size: 3em;
+      margin-bottom: 20px;
+      animation: shake 0.5s ease-in-out infinite alternate;
+    }
+    .exp-notification h2 {
+      color: #d6336c;
+      font-size: 1.8em;
+      margin-bottom: 15px;
+    }
+    .exp-notification p {
+      color: #333;
+      font-size: 1.1em;
+      margin-bottom: 10px;
+    }
+    .exp-details p {
+      margin: 8px 0;
+      font-size: 1em;
+    }
+    .exp-details span {
+      color: #d6336c;
+      font-weight: 600;
+    }
+    .exp-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    .exp-buttons button {
+      padding: 12px 20px;
+      border: none;
+      background: #ff6b6b;
+      color: white;
+      border-radius: 10px;
+      font-size: 1em;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .exp-buttons button:hover {
+      background: #d6336c;
+      transform: translateY(-2px);
+    }
+    .exp-buttons .retry-button {
+      background: #28a745;
+    }
+    .exp-buttons .retry-button:hover {
+      background: #218838;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @keyframes zoomIn {
+      from { transform: scale(0.7); }
+      to { transform: scale(1); }
+    }
+    @keyframes shake {
+      from { transform: translateX(-5px); }
+      to { transform: translateX(5px); }
+    }
     @media (max-width: 600px) {
       .container {
         padding: 15px;
@@ -207,12 +521,54 @@
       .avatar {
         width: 80px;
         height: 80px;
+        font-size: 1.5em;
       }
       h1 {
         font-size: 2em;
       }
       .question {
         font-size: 1.1em;
+      }
+      .monster-list {
+        grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+      }
+      .monster-list a {
+        width: 80px;
+        height: 100px;
+      }
+      .monster-list i {
+        font-size: 1.5em;
+      }
+      .monster-list span {
+        font-size: 0.7em;
+      }
+      .monster-list .exp {
+        font-size: 0.6em;
+      }
+      .image-placeholder img {
+        max-height: 100px;
+      }
+      .history-table {
+        font-size: 0.8em;
+      }
+      .history-table th, .history-table td {
+        padding: 8px;
+      }
+      .history-table .score-progress {
+        width: 60px;
+      }
+      .exp-notification-content {
+        padding: 20px;
+        width: 95%;
+      }
+      .exp-icon {
+        font-size: 2.5em;
+      }
+      .exp-notification h2 {
+        font-size: 1.5em;
+      }
+      .exp-details p {
+        font-size: 0.9em;
       }
     }
   </style>
@@ -222,37 +578,74 @@
     <!-- Auth Section -->
     <div class="auth-section" id="authSection">
       <h2>🔐 Đăng nhập / Đăng ký</h2>
-      <input type="email" id="email" placeholder="Email" />
-      <input type="password" id="password" placeholder="Mật khẩu" />
-      <button onclick="window.login()">Đăng nhập</button>
-      <button onclick="window.register()">Đăng ký</button>
+      <label for="email">Email</label>
+      <input type="email" id="email" placeholder="Email" aria-label="Email" required />
+      <label for="password">Mật khẩu</label>
+      <input type="password" id="password" placeholder="Mật khẩu" aria-label="Mật khẩu" required />
+      <button onclick="window.login()" aria-label="Đăng nhập">Đăng nhập</button>
+      <button onclick="window.register()" aria-label="Đăng ký">Đăng ký</button>
+    </div>
+
+    <!-- Profile Form -->
+    <div class="profile-form" id="profileForm">
+      <h2>📋 Thông tin cá nhân</h2>
+      <label for="fullName">Họ và Tên</label>
+      <input type="text" id="fullName" placeholder="Họ và Tên" aria-label="Họ và Tên" required />
+      <label for="className">Lớp học</label>
+      <input type="text" id="className" placeholder="Lớp học" aria-label="Lớp học" required />
+      <button onclick="window.submitProfile()" aria-label="Xác nhận thông tin cá nhân">Xác nhận</button>
     </div>
 
     <h1 id="mainTitle">🎌 Hiệp Sĩ Nhật Ngữ 🎮</h1>
 
     <!-- Profile -->
     <div class="profile" id="profileSection">
-      <div class="avatar" id="avatar"></div>
+      <div class="avatar" id="avatar" aria-label="Avatar người chơi"></div>
       <div class="stats">
-        <p><strong>Biệt danh:</strong> <span id="nickname">Chưa đăng nhập</span></p>
-        <p><strong>Level:</strong> <span id="level">0</span></p>
+        <p><strong>Họ và Tên:</strong> <span id="fullNameDisplay">Chưa cập nhật</span></p>
+        <p><strong>Lớp học:</strong> <span id="classNameDisplay">Chưa cập nhật</span></p>
+        <p><strong>Cấp bậc:</strong> <span id="rank">Chưa đăng nhập</span></p>
+        <p><strong>Level:</strong> <span id="level">1</span></p>
         <p><strong>EXP:</strong> <span id="exp">0</span></p>
         <div class="progress-bar">
-          <div class="progress-bar-fill" id="expBar"></div>
+          <div class="progress-bar-fill" id="expBar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+        </div>
+        <div class="profile-buttons">
+          <button onclick="window.showMonsterSection()" aria-label="Diệt quái">Diệt quái</button>
+          <button onclick="window.showLeaderboard()" aria-label="Xem bảng xếp hạng">Bảng xếp hạng</button>
+          <button onclick="window.logout()" aria-label="Đăng xuất">Đăng xuất</button>
+        </div>
+        <div class="progress-history">
+          <h3>Lịch sử diệt quái</h3>
+          <table class="history-table" id="monsterHistory">
+            <thead>
+              <tr>
+                <th>Quái vật</th>
+                <th>Cấp</th>
+                <th>Điểm</th>
+                <th>EXP</th>
+                <th>Thời gian</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
         </div>
       </div>
     </div>
 
     <!-- Quiz Section -->
     <div class="quiz-section" id="quizSection">
-      <h2>📚 Câu hỏi tiếng Nhật</h2>
-      <p class="question" id="question">Từ "猫" có nghĩa là gì?</p>
-      <div class="answers">
-        <button onclick="window.submitAnswer('Chó')">Chó</button>
-        <button onclick="window.submitAnswer('Mèo')">Mèo</button>
-        <button onclick="window.submitAnswer('Chuột')">Chuột</button>
-        <button onclick="window.submitAnswer('Cá')">Cá</button>
+      <h2>📝 Bài tập tiếng Nhật</h2>
+      <div id="questionText"></div>
+      <div class="quiz-navigation">
+        <button onclick="window.submitQuiz()" aria-label="Nộp bài">Nộp bài</button>
       </div>
+    </div>
+
+    <!-- Monster Section -->
+    <div class="monster-section" id="monsterSection">
+      <h2>⚔️ Diệt Quái</h2>
+      <div class="monster-list" id="monsterList"></div>
     </div>
 
     <!-- Leaderboard -->
@@ -262,92 +655,765 @@
         <thead>
           <tr>
             <th>Hạng</th>
-            <th>Người chơi</th>
+            <th>Họ và Tên</th>
+            <th>Lớp học</th>
+            <th>Cấp bậc</th>
             <th>Level</th>
             <th>EXP</th>
           </tr>
         </thead>
-        <tbody id="leaderboard">
-          <!-- Dữ liệu sẽ được thêm bằng JS -->
-        </tbody>
+        <tbody id="leaderboard"></tbody>
       </table>
+    </div>
+
+    <!-- EXP Notification Modal -->
+    <div class="exp-notification" id="expNotification" role="dialog" aria-labelledby="expNotificationTitle" aria-hidden="true">
+      <div class="exp-notification-content">
+        <div class="exp-icon" id="expIcon"></div>
+        <h2 id="expNotificationTitle">Kết quả chiến đấu</h2>
+        <p id="expMessage"></p>
+        <div class="exp-details">
+          <p><strong>Quái vật:</strong> <span id="expMonster"></span></p>
+          <p><strong>Điểm số:</strong> <span id="expScore"></span></p>
+          <p id="expAmountContainer"><strong>EXP nhận được:</strong> <span id="expAmount"></span></p>
+        </div>
+        <div class="exp-buttons" id="expButtons"></div>
+      </div>
     </div>
   </div>
 
-  <!-- Firebase SDK -->
-  <script type="module">
-    // Firebase config và khởi tạo (sẽ thêm nội dung nếu bạn gửi tiếp)
-  </script>
-
   <!-- Main Script -->
-  <script type="module">
-    // Check login state on page load
-    window.onload = function() {
-      const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
-      updateUI(isLoggedIn);
+  <script>
+    // Rank definitions
+    const ranks = [
+      { name: 'Tân Binh', emoji: '🛡️', minLevel: 1, gradient: 'linear-gradient(45deg, #a8dadc, #457b9d)' },
+      { name: 'Lính Mới', emoji: '🪖', minLevel: 2, gradient: 'linear-gradient(45deg, #f1faee, #457b9d)' },
+      { name: 'Người Học Việc', emoji: '📘', minLevel: 5, gradient: 'linear-gradient(45deg, #e9c46a, #f4a261)' },
+      { name: 'Thư Sinh', emoji: '🎓', minLevel: 10, gradient: 'linear-gradient(45deg, #e76f51, #f4a261)' },
+      { name: 'Học Giả', emoji: '📚', minLevel: 15, gradient: 'linear-gradient(45deg, #2a9d8f, #264653)' },
+      { name: 'Tập Sự Kiếm Sĩ', emoji: '⚔️', minLevel: 20, gradient: 'linear-gradient(45deg, #e63946, #d00000)' },
+      { name: 'Hiệp Sĩ', emoji: '🛡️⚔️', minLevel: 25, gradient: 'linear-gradient(45deg, #a8dadc, #1d3557)' },
+      { name: 'Chiến Binh', emoji: '🧱', minLevel: 30, gradient: 'linear-gradient(45deg, #606c38, #283618)' },
+      { name: 'Võ Sĩ Đạo', emoji: '🥷', minLevel: 35, gradient: 'linear-gradient(45deg, #7209b7, #3c096c)' },
+      { name: 'Thách Đấu', emoji: '🥇', minLevel: 40, gradient: 'linear-gradient(45deg, #ffd60a, #ffc107)' },
+      { name: 'Kỳ Tài', emoji: '🌟', minLevel: 50, gradient: 'linear-gradient(45deg, #ff70a6, #ff006e)' },
+      { name: 'Kiếm Thánh', emoji: '🔥🗡️', minLevel: 60, gradient: 'linear-gradient(45deg, #ef233c, #d00000)' },
+      { name: 'Truyền Thuyết', emoji: '🐉', minLevel: 70, gradient: 'linear-gradient(45deg, #006d77, #023e8a)' }
+    ];
+
+    // Monster definitions with updated icons
+    const monsters = [
+      { level: 1, name: 'Sói Lửa', icon: 'fa-wolf-pack-battalion', exp: 20, isBoss: false },
+      { level: 2, name: 'Mèo Quỷ', icon: 'fa-cat', exp: 25, isBoss: false },
+      { level: 3, name: 'Rắn Độc', icon: 'fa-snake', exp: 30, isBoss: false },
+      { level: 4, name: 'Chim Sét', icon: 'fa-crow', exp: 35, isBoss: false },
+      { level: 5, name: 'Hà Mã Lửa', icon: 'fa-hippo', exp: 40, isBoss: false },
+      { level: 6, name: 'Gấu Băng', icon: 'fa-bear', exp: 45, isBoss: false },
+      { level: 7, name: 'Cáo Huyền', icon: 'fa-fox', exp: 50, isBoss: false },
+      { level: 8, name: 'Hươu Sao', icon: 'fa-deer', exp: 55, isBoss: false },
+      { level: 9, name: 'Ngựa Gió', icon: 'fa-horse', exp: 60, isBoss: false },
+      { level: 10, name: 'Hắc Long Bí Ẩn', icon: 'fa-dragon', exp: 80, isBoss: true },
+      { level: 11, name: 'Bạch Hổ', icon: 'fa-tiger', exp: 70, isBoss: false },
+      { level: 12, name: 'Quạ Bóng Tối', icon: 'fa-crow', exp: 75, isBoss: false },
+      { level: 13, name: 'Cú Sấm', icon: 'fa-owl', exp: 80, isBoss: false },
+      { level: 14, name: 'Rùa Lửa', icon: 'fa-turtle', exp: 85, isBoss: false },
+      { level: 15, name: 'Sư Tử Vàng', icon: 'fa-lion', exp: 90, isBoss: false },
+      { level: 16, name: 'Cò Ma', icon: 'fa-dove', exp: 95, isBoss: false },
+      { level: 17, name: 'Bò Cạp Độc', icon: 'fa-scorpion', exp: 100, isBoss: false },
+      { level: 18, name: 'Chó Săn Bóng', icon: 'fa-dog', exp: 105, isBoss: false },
+      { level: 19, name: 'Đại Bàng Sét', icon: 'fa-eagle', exp: 110, isBoss: false },
+      { level: 20, name: 'Quỷ Vương Hỏa Ngục', icon: 'fa-skull-crossbones', exp: 130, isBoss: true },
+      { level: 21, name: 'Rồng Biển', icon: 'fa-fish-fins', exp: 120, isBoss: false },
+      { level: 22, name: 'Kỳ Lân Lửa', icon: 'fa-unicorn', exp: 125, isBoss: false },
+      { level: 23, name: 'Phượng Hoàng Băng', icon: 'fa-phoenix', exp: 130, isBoss: false },
+      { level: 24, name: 'Hắc Ưng', icon: 'fa-hawk', exp: 135, isBoss: false },
+      { level: 25, name: 'Hổ Rừng', icon: 'fa-paw', exp: 140, isBoss: false },
+      { level: 26, name: 'Sói Bão', icon: 'fa-wind', exp: 145, isBoss: false },
+      { level: 27, name: 'Rắn Biển', icon: 'fa-water', exp: 150, isBoss: false },
+      { level: 28, name: 'Chim Lửa', icon: 'fa-fire', exp: 155, isBoss: false },
+      { level: 29, name: 'Gấu Sấm', icon: 'fa-bolt', exp: 160, isBoss: false },
+      { level: 30, name: 'Tử Long Huyền Bí', icon: 'fa-dragon', exp: 180, isBoss: true },
+      { level: 31, name: 'Cáo Lửa', icon: 'fa-fire-flame-curved', exp: 170, isBoss: false },
+      { level: 32, name: 'Hươu Băng', icon: 'fa-snowflake', exp: 175, isBoss: false },
+      { level: 33, name: 'Ngựa Sấm', icon: 'fa-cloud-bolt', exp: 180, isBoss: false },
+      { level: 34, name: 'Sư Tử Bão', icon: 'fa-cloud-showers-heavy', exp: 185, isBoss: false },
+      { level: 35, name: 'Vương Long Vô Ảnh', icon: 'fa-dragon', exp: 220, isBoss: true }
+    ];
+
+    // Sample questions for each level
+    const questions = [
+      // Level 1: Sói Lửa
+      {
+        level: 1,
+        exp: 20,
+        questions: [
+          // 問題I
+          { id: 'q1-rei', type: 'radio', question: 'れい）', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ-YAvLxURrkPteMKMOy56XXwJVG9965lD9Nw&s', answers: ['ノート', 'つくえ', 'ほん'], correct: 'つくえ', points: 0 },
+          { id: 'q1', type: 'radio', question: '１', image: 'https://illustimage.com/photo/10801.png', answers: ['けしゴム', 'えんぴつ', 'ペン'], correct: 'えんぴつ', points: 2 },
+          { id: 'q2', type: 'radio', question: '２', image: 'https://frame-illust.com/fi/wp-content/uploads/2017/05/clock-03.png', answers: ['とけい', 'でんわ', 'かばん'], correct: 'とけい', points: 2 },
+          { id: 'q3', type: 'radio', question: '３', image: 'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj8xP2FGiCtrON7YRbPZJ6fl5dH3IL4fKipjy1SV36iZ1-V2eOBcF2-fAc-fFfS9hy2l3BIhPPRX4vLbiRmYt0VcPwl-mWzNeWYkj3ZmlkvGEa_GoZqRv8sUJVu5HkojUZcyslTwHV-nV9J/s800/scool_room_kyoushitsu.png', answers: ['きょうしつ', 'としょかん', 'へや'], correct: 'きょうしつ', points: 2 },
+          // 問題II
+          { id: 'q4', type: 'radio', question: '４．１：３０', answers: ['いちじ さんじゅっぶん', 'いちじ さんじっぶん', 'いちじはん'], correct: 'いちじはん', points: 2 },
+          { id: 'q5', type: 'radio', question: '５．８：４５', answers: ['はちじ よんじゅうごふん', 'はちじ よじゅうごふん', 'くじ よんじゅっぷん'], correct: 'はちじ よんじゅうごふん', points: 2 },
+          { id: 'q6', type: 'radio', question: '６．２／１５', answers: ['にがつ じゅうごにち', 'ふつか じゅうごにち', 'にがつ じゅごにち'], correct: 'にがつ じゅうごにち', points: 2 },
+          { id: 'q7', type: 'radio', question: '７．Thứ ３ tuần sau', answers: ['らいしゅう のかようび', 'せんしゅう のかようび', 'こんしゅう のかようび'], correct: 'らいしゅう のかようび', points: 2 },
+          { id: 'q8', type: 'radio', question: '８．０８０－１２３４－５６７８', answers: ['ゼロはちゼロ いちにさんよん ごろくななはち', 'れいはちれい いちにさんよん ごろくななはち', 'まるはちまる いちにさんよん ごろくななはち'], correct: 'ゼロはちゼロ いちにさんよん ごろくななはち', points: 2 },
+          // 問題III
+          { id: 'q3-rei', type: 'radio', question: 'れい）いち ー（　　　）ー さん', answers: ['よん', 'に', 'ご'], correct: 'に', points: 0 },
+          { id: 'q9', type: 'radio', question: '９．げつようび ー（　　　）ー すいようび', answers: ['もくようび', 'かようび', 'どようび'], correct: 'かようび', points: 2 },
+          { id: 'q10', type: 'radio', question: '１０．ついたち ー（　　　）ー みっか', answers: ['ふつか', 'いつか', 'むいか'], correct: 'ふつか', points: 2 },
+          { id: 'q11', type: 'radio', question: '１１．（　　　）ー きのう ー きょう', answers: ['おととい', 'あした', 'あさって'], correct: 'おととい', points: 2 },
+          { id: 'q12', type: 'radio', question: '１２．いち ー に ー （　　　） ー よん', answers: ['ろく', 'さん', 'ご'], correct: 'さん', points: 2 },
+          { id: 'q13', type: 'radio', question: '１３．せん ー （　　　）ー さんぜん', answers: ['にせん', 'よんせん', 'ごせん'], correct: 'にせん', points: 2 },
+          // 問題IV
+          { id: 'q4-rei', type: 'radio', question: 'れい）わたし（　　　）がくせいです。', answers: ['が', 'を', 'は'], correct: 'は', points: 0 },
+          { id: 'q14', type: 'radio', question: '１４．これ（　　　）ほんです。', answers: ['は', 'が', 'を'], correct: 'は', points: 2 },
+          { id: 'q15', type: 'radio', question: '１５．ここ（　　　）ITMセンターです。', answers: ['は', 'が', 'を'], correct: 'は', points: 2 },
+          // 問題V
+          { id: 'q5-rei', type: 'text', question: 'れい）これは（わたし／ほん／の）です。', correct: 'これは わたしの ほんです', points: 0 },
+          { id: 'q28', type: 'text', question: '２８．(ほん／わたし／の／これ／は）です。', correct: 'これは わたしの ほんです', points: 4 },
+          { id: 'q29', type: 'text', question: '２９．(せんせい／てちょう／の／ですか／これ／は）。', correct: 'これは せんせいの てちょうですか', points: 4 },
+          { id: 'q30', type: 'text', question: '３０．(じしょ／あれ／じゃありません／は）。', correct: 'あれは じしょじゃありません', points: 4 },
+          { id: 'q31', type: 'text', question: '３１．(いま／なんじ／ですか）。', correct: 'いま なんじですか', points: 4 },
+          // 問題VI
+          { id: 'q32', type: 'radio', question: '３２．A：おはようございます。B：おはようございます。A：（　　　）はミンさんですか。', answers: ['あなた', 'わたし', 'あのひと'], correct: 'あなた', points: 3 },
+          { id: 'q33', type: 'radio', question: '３３．B：はい、わたし（　　　）ミンです。', answers: ['は', 'が', 'を'], correct: 'は', points: 3 },
+          { id: 'q34', type: 'radio', question: '３４．B：（　　　）よろしくおねがいします。', answers: ['はい', 'どうぞ', 'こちらこそ'], correct: 'こちらこそ', points: 3 },
+          { id: 'q35', type: 'radio', question: '３５．A：ミンさん（　　　）ベトナムじんですか。', answers: ['は', 'も', 'が'], correct: 'は', points: 3 },
+          { id: 'q36', type: 'radio', question: '３６．B：はい、ベトナムじんです。山田さんは（　　　）ですか。', answers: ['どなた', 'なにじん', 'なん'], correct: 'なにじん', points: 3 },
+          // 問題VII
+          { id: 'q7-rei', type: 'radio', question: 'れい）X: おはようございます', answers: ['こんにちは', 'おはようございます', 'こんばんは'], correct: 'おはようございます', points: 0 },
+          { id: 'q37', type: 'radio', question: '３７．X: はじめまして。わたしはタンです。', answers: ['どうもありがとうございます。', 'はじめまして。わたしはリンです。', 'さようなら。'], correct: 'はじめまして。わたしはリンです。', points: 3 },
+          { id: 'q38', type: 'radio', question: '３８．X: これは なんですか。', answers: ['それは ほんです。', 'これはミラーさんです。', 'ここはきょうしつです。'], correct: 'それは ほんです。', points: 3 },
+          { id: 'q39', type: 'radio', question: '３９．X: いま なんじですか。', answers: ['じゅうじはんです。', 'じゅうにがつです。', 'どようびです。'], correct: 'じゅうじはんです。', points: 3 },
+          { id: 'q40', type: 'radio', question: '４０．X: この かばんは だれのですか。', answers: ['わたしのです。', 'わたしです。', 'だれです。'], correct: 'わたしのです。', points: 3 },
+          { id: 'q41', type: 'radio', question: '４１．X: あのかたは どなたですか。', answers: ['わたしの せんせいです。', 'わたしは がくせいです。', 'あのひとは にほんじんです。'], correct: 'わたしの せんせいです。', points: 3 }
+        ]
+      },
+      // Levels 2 to 35
+      ...Array.from({ length: 34 }, (_, i) => ({
+        level: i + 2,
+        exp: monsters[i + 1].exp,
+        questions: [
+          { question: `Con mèo trong tiếng Nhật là gì? (Lv${i + 2})`, answers: ['Neko', 'Inu', 'Tori', 'Kuma'], correct: 'Neko', points: 2 },
+          { question: `Xin chào trong tiếng Nhật là gì? (Lv${i + 2})`, answers: ['Konnichiwa', 'Arigatou', 'Sayonara', 'O-neeto'], correct: 'Konnichiwa', points: 2 },
+          { question: `Số 1 trong tiếng Nhật là gì? (Lv${i + 2})`, answers: ['Ichi', 'Ni', 'San', 'Yon'], correct: 'Ichi', points: 2 },
+          { question: `Cảm ơn trong tiếng Nhật là gì? (Lv${i + 2})`, answers: ['Arigatou', 'Konnichiwa', 'Sayonara', 'O-neeto'], correct: 'Arigatou', points: 2 },
+          { question: `Tạm biệt trong tiếng Nhật là gì? (Lv${i + 2})`, answers: ['Sayonara', 'Konnichiwa', 'Arigatou', 'O-neeto'], correct: 'Sayonara', points: 2 }
+        ]
+      }))
+    ];
+
+    // Mock user data
+    let userData = {
+      nickname: 'Chưa đăng nhập',
+      fullName: 'Chưa cập nhật',
+      className: 'Chưa cập nhật',
+      level: 1,
+      exp: 0
     };
 
-    // Update UI based on login state
-    function updateUI(isLoggedIn) {
+    // Current quiz state
+    let currentQuiz = null;
+    let userAnswers = [];
+
+    // Initialize
+    window.onload = function() {
+      const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+      const profileCompleted = localStorage.getItem('profileCompleted') === 'true';
+      updateUI(isLoggedIn, profileCompleted);
+      if (isLoggedIn) {
+        userData.nickname = localStorage.getItem('nickname') || 'Người chơi';
+        userData.fullName = localStorage.getItem('fullName') || 'Chưa cập nhật';
+        userData.className = localStorage.getItem('className') || 'Chưa cập nhật';
+        userData.level = parseInt(localStorage.getItem('level')) || 1;
+        userData.exp = parseInt(localStorage.getItem('exp')) || 0;
+        updateProfile();
+        updateMonsterHistory();
+        if (profileCompleted) {
+          updateLeaderboard();
+          generateMonsterLinks();
+        }
+      }
+      // Enable keyboard navigation
+      document.querySelectorAll('button, input').forEach(element => {
+        element.addEventListener('keypress', (e) => {
+          if (e.key === 'Enter') element.click();
+        });
+      });
+    };
+
+    // Normalize text input for comparison
+    function normalizeAnswer(input) {
+      return input.trim().replace(/\s+/g, ' ').replace(/[。、]/g, '');
+    }
+
+    // Get rank based on level
+    function getRank(level) {
+      let currentRank = ranks[0];
+      for (const rank of ranks) {
+        if (level >= rank.minLevel) {
+          currentRank = rank;
+        } else {
+          break;
+        }
+      }
+      return currentRank;
+    }
+
+    // Get all users from localStorage
+    function getAllUsers() {
+      const users = localStorage.getItem('allUsers');
+      return users ? JSON.parse(users) : [];
+    }
+
+    // Save all users to localStorage
+    function saveAllUsers(users) {
+      localStorage.setItem('allUsers', JSON.stringify(users));
+    }
+
+    // Update UI
+    function updateUI(isLoggedIn, profileCompleted) {
       const authSection = document.getElementById('authSection');
+      const profileForm = document.getElementById('profileForm');
       const mainTitle = document.getElementById('mainTitle');
       const profileSection = document.getElementById('profileSection');
       const quizSection = document.getElementById('quizSection');
       const leaderboardSection = document.getElementById('leaderboardSection');
+      const monsterSection = document.getElementById('monsterSection');
+
+      if (!quizSection) {
+        console.error('Quiz section not found');
+        return;
+      }
 
       if (isLoggedIn) {
         authSection.classList.add('logged-in');
-        mainTitle.classList.add('logged-in');
-        profileSection.classList.add('logged-in');
-        quizSection.classList.add('logged-in');
-        leaderboardSection.classList.add('logged-in');
-        document.getElementById('nickname').textContent = localStorage.getItem('nickname') || 'Người chơi';
+        if (profileCompleted) {
+          profileForm.classList.remove('logged-in');
+          mainTitle.classList.add('logged-in');
+          profileSection.classList.add('logged-in');
+        } else {
+          profileForm.classList.add('logged-in');
+          mainTitle.classList.remove('logged-in');
+          profileSection.classList.remove('logged-in');
+          quizSection.classList.remove('logged-in');
+          leaderboardSection.classList.remove('active');
+          monsterSection.classList.remove('active');
+        }
       } else {
         authSection.classList.remove('logged-in');
+        profileForm.classList.remove('logged-in');
         mainTitle.classList.remove('logged-in');
         profileSection.classList.remove('logged-in');
         quizSection.classList.remove('logged-in');
-        leaderboardSection.classList.remove('logged-in');
+        leaderboardSection.classList.remove('active');
+        monsterSection.classList.remove('active');
       }
     }
 
-    // Expose functions to global scope
-    window.submitAnswer = function(answer) {
-      const correct = "Mèo";
-      if (answer === correct) {
-        alert("✅ Chính xác! Bạn nhận được 20 EXP!");
-        // cập nhật exp và level ở đây
+    // Update profile
+    function updateProfile() {
+      const rank = getRank(userData.level);
+      document.getElementById('fullNameDisplay').textContent = userData.fullName;
+      document.getElementById('classNameDisplay').textContent = userData.className;
+      document.getElementById('rank').textContent = `${rank.name} ${rank.emoji}`;
+      document.getElementById('level').textContent = userData.level;
+      document.getElementById('exp').textContent = userData.exp;
+      const expPercentage = ((userData.exp % 100) / 100) * 100;
+      const expBar = document.getElementById('expBar');
+      expBar.style.width = `${expPercentage}%`;
+      expBar.setAttribute('aria-valuenow', expPercentage);
+      const avatar = document.getElementById('avatar');
+      avatar.style.background = rank.gradient;
+      avatar.textContent = rank.emoji;
+    }
+
+    // Update monster history
+    function updateMonsterHistory() {
+      const history = JSON.parse(localStorage.getItem('monsterHistory') || '[]');
+      const historyTableBody = document.querySelector('#monsterHistory tbody');
+      historyTableBody.innerHTML = '';
+      if (history.length === 0) {
+        const row = document.createElement('tr');
+        row.innerHTML = '<td colspan="5" style="text-align: center;">Chưa có lịch sử diệt quái.</td>';
+        historyTableBody.appendChild(row);
+        return;
+      }
+      history.sort((a, b) => new Date(b.date) - new Date(a.date));
+      history.forEach(m => {
+        const monster = monsters.find(mon => mon.name === m.name && mon.level === m.level);
+        const iconClass = monster ? monster.icon : 'fa-question';
+        const exp = monster ? monster.exp : m.exp || 0;
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td><i class="fas ${iconClass} monster-icon"></i> ${m.name}</td>
+          <td>Lv${m.level}</td>
+          <td>
+            <div class="score-progress">
+              <div class="score-progress-fill" style="width: ${m.score}%"></div>
+            </div>
+            ${m.score.toFixed(2)}%
+          </td>
+          <td>+${exp}</td>
+          <td>${new Date(m.date).toLocaleString('vi-VN', { dateStyle: 'short', timeStyle: 'short' })}</td>
+        `;
+        historyTableBody.appendChild(row);
+      });
+    }
+
+    // Update leaderboard
+    function updateLeaderboard() {
+      const leaderboardBody = document.getElementById('leaderboard');
+      leaderboardBody.innerHTML = '';
+      const allUsers = getAllUsers();
+      allUsers
+        .sort((a, b) => b.exp - a.exp)
+        .forEach((player, index) => {
+          const rank = getRank(player.level);
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${index + 1}</td>
+            <td>${player.fullName}</td>
+            <td>${player.className}</td>
+            <td>${rank.name} ${rank.emoji}</td>
+            <td>${player.level}</td>
+            <td>${player.exp}</td>
+          `;
+          leaderboardBody.appendChild(row);
+        });
+    }
+
+    // Generate monster links with EXP
+    function generateMonsterLinks() {
+      const monsterList = document.getElementById('monsterList');
+      monsterList.innerHTML = '';
+      monsters.forEach((monster, i) => {
+        const link = document.createElement('a');
+        link.href = `javascript:startQuiz(${i + 1})`;
+        link.className = monster.isBoss ? 'boss' : '';
+        link.setAttribute('aria-label', `Diệt quái ${monster.name} cấp ${monster.level}`);
+        link.innerHTML = `
+          <i class="fas ${monster.icon}"></i>
+          <span>${monster.name} Lv${monster.level}</span>
+          <span class="exp">+${monster.exp} EXP</span>
+        `;
+        monsterList.appendChild(link);
+      });
+    }
+
+    // Start quiz
+    window.startQuiz = function(level) {
+      const quizSection = document.getElementById('quizSection');
+      const monsterSection = document.getElementById('monsterSection');
+      const leaderboardSection = document.getElementById('leaderboardSection');
+      quizSection.classList.add('logged-in');
+      monsterSection.classList.remove('active');
+      leaderboardSection.classList.remove('active');
+
+      currentQuiz = questions[level - 1];
+      userAnswers = new Array(currentQuiz.questions.length).fill(null);
+      showAllQuestions();
+    };
+
+    // Show all questions (only for Level 1)
+    function showAllQuestions() {
+      const questionText = document.getElementById('questionText');
+      questionText.innerHTML = '';
+
+      if (currentQuiz.level === 1) {
+        const sections = [
+          { start: 0, end: 4, title: '問題Ⅰ．ただしい こたえを えらんでください。（2*3=6）', vietnamese: 'Hãy chọn câu trả lời đúng' },
+          { start: 4, end: 9, title: '問題II．ただしい よみかたを えらんでください。（2*5=10）', vietnamese: 'Hãy chọn cách đọc đúng' },
+          { start: 9, end: 14, title: '問題III．（　　）に はいる いちばん よいものを えらんでください。（2*5=10）', vietnamese: 'Hãy chọn đáp án đúng nhất trong （　）' },
+          { start: 14, end: 17, title: '問題IV．（　　）に はいる いちばん よいものを えらんでください。（2*2=4）', vietnamese: 'Hãy chọn đáp án đúng nhất trong （　）' },
+          { start: 17, end: 22, title: '問題V．れいのように、かいてください。（4*4=16）', vietnamese: 'Hãy sắp xếp lại câu theo như câu ví dụ. Lưu ý: Học viên viết đúng, đủ hết cả dấu chấm và phẩy, không cách. Nếu không sẽ không được tính điểm.' },
+          { start: 22, end: 28, title: '問題VI．（　　）に はいる いちばん よいものを えらんでください。（3*5=15）', vietnamese: 'Hãy chọn đáp án đúng nhất cho vào trong ( ).', extra: `
+            <div style="border: 1px solid #ddd; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
+              <p>A：おはようございます。</p>
+              <p>B：おはようございます。</p>
+              <p>A：（ ３２ ）はミンさんですか。</p>
+              <p>B：はい、わたし（ ３３ ）ミンです。</p>
+              <p>A：わたしは山田です。どうぞよろしく。</p>
+              <p>B：（ ３４ ）よろしくおねがいします。</p>
+              <p>A：ミンさん（ ３５ ）ベトナムじんですか。</p>
+              <p>B：はい、ベトナムじんです。山田さんは（ ３６ ）ですか。</p>
+              <p>A：にほんじんです。</p>
+            </div>
+          ` },
+          { start: 28, end: 34, title: '問題VII．Xのこたえとして いちばん よいものを えらんでください。（3*5=15）', vietnamese: 'Hãy chọn đáp án đúng nhất đối với câu trả lời của X' }
+        ];
+
+        sections.forEach(section => {
+          const sectionDiv = document.createElement('div');
+          sectionDiv.className = 'question-section';
+          sectionDiv.innerHTML = `
+            <h2>${section.title}</h2>
+            <div class="vietnamese">${section.vietnamese}</div>
+            ${section.extra || ''}
+          `;
+          for (let i = section.start; i < section.end; i++) {
+            const quiz = currentQuiz.questions[i];
+            const questionDiv = document.createElement('div');
+            questionDiv.className = quiz.id.includes('rei') ? 'example' : 'question';
+            let questionContent = `<p>${quiz.question}</p>`;
+
+            if (quiz.image) {
+              questionContent += `
+                <div class="image-placeholder">
+                  <img src="${quiz.image}" alt="Hình ảnh câu hỏi ${quiz.id}" id="image-${quiz.id}">
+                </div>
+              `;
+            }
+
+            if (quiz.type === 'radio') {
+              questionContent += '<div class="options">';
+              quiz.answers.forEach((answer, index) => {
+                questionContent += `
+                  <div class="option">
+                    <input type="radio" id="${quiz.id}-${index + 1}" name="${quiz.id}" value="${answer}" ${userAnswers[i] === answer ? 'checked' : ''}>
+                    <label for="${quiz.id}-${index + 1}">${answer}</label>
+                  </div>
+                `;
+              });
+              questionContent += '</div>';
+            } else if (quiz.type === 'text') {
+              questionContent += `
+                <input type="text" id="${quiz.id}" class="text-input" placeholder="Viết câu hoàn chỉnh" value="${userAnswers[i] || ''}" aria-label="Nhập câu trả lời cho câu ${quiz.id}">
+              `;
+            }
+
+            questionContent += `<div class="answer-feedback" id="feedback-${quiz.id}"></div>`;
+            questionDiv.innerHTML = questionContent;
+            sectionDiv.appendChild(questionDiv);
+          }
+          questionText.appendChild(sectionDiv);
+        });
+
+        currentQuiz.questions.forEach((quiz, index) => {
+          if (quiz.type === 'radio') {
+            quiz.answers.forEach((answer, ansIndex) => {
+              const input = document.getElementById(`${quiz.id}-${ansIndex + 1}`);
+              if (input) {
+                input.addEventListener('change', () => {
+                  userAnswers[index] = answer;
+                });
+              }
+            });
+          } else if (quiz.type === 'text') {
+            const input = document.getElementById(quiz.id);
+            if (input) {
+              input.addEventListener('input', (e) => {
+                userAnswers[index] = e.target.value;
+              });
+            }
+          }
+        });
       } else {
-        alert("❌ Sai rồi! Đáp án đúng là 'Mèo'.");
+        const sectionDiv = document.createElement('div');
+        sectionDiv.className = 'question-section';
+        const quiz = currentQuiz.questions[0];
+        sectionDiv.innerHTML = `
+          <h2>Bài tập Level ${currentQuiz.level}</h2>
+          <div class="question">${quiz.question}</div>
+          <div class="options">
+            ${quiz.answers.map((answer, index) => `
+              <div class="option">
+                <input type="radio" id="${quiz.id}-${index + 1}" name="${quiz.id}" value="${answer}" ${userAnswers[0] === answer ? 'checked' : ''}>
+                <label for="${quiz.id}-${index + 1}">${answer}</label>
+              </div>
+            `).join('')}
+          </div>
+          <div class="answer-feedback" id="feedback-${quiz.id}"></div>
+        `;
+        questionText.appendChild(sectionDiv);
+
+        quiz.answers.forEach((answer, index) => {
+          document.getElementById(`${quiz.id}-${index + 1}`).addEventListener('change', () => selectAnswer(answer));
+        });
+      }
+    }
+
+    // Select answer (for levels 2-35)
+    function selectAnswer(answer) {
+      userAnswers[0] = answer;
+      const quiz = currentQuiz.questions[0];
+      const normalizedAnswer = quiz.type === 'text' ? normalizeAnswer(answer) : answer;
+      const normalizedCorrect = quiz.type === 'text' ? normalizeAnswer(quiz.correct) : quiz.correct;
+      const feedback = document.getElementById(`feedback-${quiz.id}`);
+      feedback.textContent = normalizedAnswer === normalizedCorrect ? 'Đúng!' : `Sai! Đáp án đúng là: ${quiz.correct}`;
+      feedback.style.color = normalizedAnswer === normalizedCorrect ? '#28a745' : '#d6336c';
+
+      setTimeout(() => {
+        if (currentQuiz.questions.length > 1) {
+          currentQuiz.questions.shift();
+          showAllQuestions();
+        } else {
+          submitQuiz();
+        }
+      }, 1000);
+    }
+
+    // Submit quiz
+    window.submitQuiz = function() {
+      let totalPoints = 0;
+      let userPoints = 0;
+      currentQuiz.questions.forEach((q, i) => {
+        totalPoints += q.points;
+        const normalizedAnswer = q.type === 'text' ? normalizeAnswer(userAnswers[i] || '') : userAnswers[i];
+        const normalizedCorrect = q.type === 'text' ? normalizeAnswer(q.correct) : q.correct;
+        if (normalizedAnswer === normalizedCorrect) {
+          userPoints += q.points;
+        }
+        if (currentQuiz.level === 1) {
+          const feedback = document.getElementById(`feedback-${q.id}`);
+          if (feedback) {
+            feedback.textContent = normalizedAnswer === normalizedCorrect ? 'Đúng!' : `Sai! Đáp án đúng là: ${q.correct}`;
+            feedback.style.color = normalizedAnswer === normalizedCorrect ? '#28a745' : '#d6336c';
+          }
+        }
+      });
+      const score = (userPoints / totalPoints) * 100;
+      const monster = monsters[currentQuiz.level - 1];
+      if (score >= 85) {
+        userData.exp += currentQuiz.exp;
+        userData.level = Math.floor(userData.exp / 100) + 1;
+        localStorage.setItem('level', userData.level);
+        localStorage.setItem('exp', userData.exp);
+        const history = JSON.parse(localStorage.getItem('monsterHistory') || '[]');
+        history.push({
+          name: monster.name,
+          level: currentQuiz.level,
+          score: score.toFixed(2),
+          date: new Date().toLocaleString()
+        });
+        localStorage.setItem('monsterHistory', JSON.stringify(history));
+        showExpNotification(true, score, currentQuiz.exp, monster);
+        updateProfile();
+        updateUserInAllUsers();
+        updateLeaderboard();
+        updateMonsterHistory();
+      } else {
+        showExpNotification(false, score, currentQuiz.exp, monster);
       }
     };
 
+    // Show EXP Notification
+    function showExpNotification(success, score, exp, monster) {
+      const expNotification = document.getElementById('expNotification');
+      const expIcon = document.getElementById('expIcon');
+      const expMessage = document.getElementById('expMessage');
+      const expMonster = document.getElementById('expMonster');
+      const expScore = document.getElementById('expScore');
+      const expAmountContainer = document.getElementById('expAmountContainer');
+      const expAmount = document.getElementById('expAmount');
+      const expButtons = document.getElementById('expButtons');
+
+      expIcon.textContent = success ? '✅' : '❌';
+      expMessage.textContent = success 
+        ? `Chúc mừng! Bạn đã tiêu diệt thành công ${monster.name}!`
+        : `Thất bại! Bạn chưa thể tiêu diệt ${monster.name}. Cần đạt 85% trở lên.`;
+      expMonster.textContent = `${monster.name} Lv${monster.level}`;
+      expScore.textContent = `${score.toFixed(2)}%`;
+      if (success) {
+        expAmountContainer.style.display = 'block';
+        expAmount.textContent = `+${exp} EXP`;
+      } else {
+        expAmountContainer.style.display = 'none';
+      }
+
+      expButtons.innerHTML = '';
+      if (success) {
+        const continueButton = document.createElement('button');
+        continueButton.textContent = 'Tiếp tục';
+        continueButton.setAttribute('aria-label', 'Quay lại danh sách quái vật');
+        continueButton.onclick = () => {
+          expNotification.classList.remove('active');
+          showMonsterSection();
+        };
+        expButtons.appendChild(continueButton);
+      } else {
+        const retryButton = document.createElement('button');
+        retryButton.textContent = 'Thử lại';
+        retryButton.className = 'retry-button';
+        retryButton.setAttribute('aria-label', 'Thử lại bài kiểm tra');
+        retryButton.onclick = () => {
+          userAnswers = new Array(currentQuiz.questions.length).fill(null);
+          expNotification.classList.remove('active');
+          showAllQuestions();
+        };
+        const backButton = document.createElement('button');
+        backButton.textContent = 'Quay lại';
+        backButton.setAttribute('aria-label', 'Quay lại danh sách quái vật');
+        backButton.onclick = () => {
+          expNotification.classList.remove('active');
+          showMonsterSection();
+        };
+        expButtons.appendChild(retryButton);
+        expButtons.appendChild(backButton);
+      }
+
+      expNotification.classList.add('active');
+    }
+
+    // Update or add user in allUsers
+    function updateUserInAllUsers() {
+      const allUsers = getAllUsers();
+      const existingUserIndex = allUsers.findIndex(user => user.nickname === userData.nickname);
+      const rank = getRank(userData.level);
+      const userEntry = {
+        nickname: userData.nickname,
+        fullName: userData.fullName,
+        className: userData.className,
+        level: userData.level,
+        exp: userData.exp,
+        rank: rank.name
+      };
+      if (existingUserIndex >= 0) {
+        allUsers[existingUserIndex] = userEntry;
+      } else {
+        allUsers.push(userEntry);
+      }
+      saveAllUsers(allUsers);
+    }
+
+    // Submit profile
+    window.submitProfile = function() {
+      const fullName = document.getElementById('fullName').value;
+      const className = document.getElementById('className').value;
+      const nameRegex = /^[a-zA-Z\sÀ-ỹ]+$/;
+      if (!nameRegex.test(fullName)) {
+        alert('Họ và Tên chỉ được chứa chữ cái và khoảng trắng!');
+        return;
+      }
+      if (fullName && className) {
+        userData.fullName = fullName;
+        userData.className = className;
+        localStorage.setItem('fullName', fullName);
+        localStorage.setItem('className', className);
+        localStorage.setItem('profileCompleted', 'true');
+        updateUserInAllUsers();
+        updateUI(true, true);
+        updateProfile();
+        updateLeaderboard();
+        updateMonsterHistory();
+        generateMonsterLinks();
+        alert('Cập nhật thông tin thành công!');
+      } else {
+        alert('Vui lòng nhập đầy đủ Họ và Tên và Lớp học!');
+      }
+    };
+
+    // Login
     window.login = function() {
       const email = document.getElementById('email').value;
       const password = document.getElementById('password').value;
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        alert('Vui lòng nhập email hợp lệ!');
+        return;
+      }
       if (email && password) {
-        // Mock login logic (replace with Firebase Authentication later)
         localStorage.setItem('isLoggedIn', 'true');
-        localStorage.setItem('nickname', email.split('@')[0]); // Simple nickname from email
-        updateUI(true);
-        alert("Đăng nhập thành công!");
+        localStorage.setItem('nickname', email.split('@')[0]);
+        userData.nickname = email.split('@')[0];
+        userData.level = 1;
+        localStorage.setItem('level', userData.level);
+        const allUsers = getAllUsers();
+        const existingUser = allUsers.find(user => user.nickname === userData.nickname);
+        if (existingUser) {
+          userData.fullName = existingUser.fullName;
+          userData.className = existingUser.className;
+          userData.level = existingUser.level;
+          userData.exp = existingUser.exp;
+          localStorage.setItem('fullName', userData.fullName);
+          localStorage.setItem('className', userData.className);
+          localStorage.setItem('level', userData.level);
+          localStorage.setItem('exp', userData.exp);
+          localStorage.setItem('profileCompleted', 'true');
+          updateUI(true, true);
+          updateProfile();
+          updateLeaderboard();
+          updateMonsterHistory();
+          generateMonsterLinks();
+        } else {
+          updateUI(true, false);
+        }
+        updateProfile();
+        alert('Đăng nhập thành công!');
       } else {
-        alert("Vui lòng nhập email và mật khẩu!");
+        alert('Vui lòng nhập email và mật khẩu!');
       }
     };
 
+    // Register
     window.register = function() {
       const email = document.getElementById('email').value;
       const password = document.getElementById('password').value;
-      if (email && password) {
-        // Mock register logic (replace with Firebase Authentication later)
-        localStorage.setItem('isLoggedIn', 'true');
-        localStorage.setItem('nickname', email.split('@')[0]); // Simple nickname from email
-        updateUI(true);
-        alert("Đăng ký thành công!");
-      } else {
-        alert("Vui lòng nhập email và mật khẩu!");
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        alert('Vui lòng nhập email hợp lệ!');
+        return;
       }
+      if (email && password) {
+        const allUsers = getAllUsers();
+        const existingUser = allUsers.find(user => user.nickname === email.split('@')[0]);
+        if (existingUser) {
+          alert('Email đã được đăng ký! Vui lòng đăng nhập hoặc sử dụng email khác.');
+          return;
+        }
+        localStorage.setItem('isLoggedIn', 'true');
+        localStorage.setItem('nickname', email.split('@')[0]);
+        userData.nickname = email.split('@')[0];
+        userData.level = 1;
+        localStorage.setItem('level', userData.level);
+        updateUI(true, false);
+        updateProfile();
+        alert('Đăng ký thành công!');
+      } else {
+        alert('Vui lòng nhập email và mật khẩu!');
+      }
+    };
+
+    // Logout
+    window.logout = function() {
+      localStorage.removeItem('isLoggedIn');
+      localStorage.removeItem('nickname');
+      localStorage.removeItem('level');
+      localStorage.removeItem('exp');
+      localStorage.removeItem('profileCompleted');
+      userData = { 
+        nickname: 'Chưa đăng nhập', 
+        fullName: userData.fullName, 
+        className: userData.className, 
+        level: 1, 
+        exp: 0 
+      };
+      updateUI(false, false);
+      updateProfile();
+      alert('Đăng xuất thành công!');
+    };
+
+    // Show monster section
+    window.showMonsterSection = function() {
+      const monsterSection = document.getElementById('monsterSection');
+      const leaderboardSection = document.getElementById('leaderboardSection');
+      const quizSection = document.getElementById('quizSection');
+      monsterSection.classList.add('active');
+      leaderboardSection.classList.remove('active');
+      quizSection.classList.remove('logged-in');
+      generateMonsterLinks();
+    };
+
+    // Show leaderboard
+    window.showLeaderboard = function() {
+      const monsterSection = document.getElementById('monsterSection');
+      const leaderboardSection = document.getElementById('leaderboardSection');
+      const quizSection = document.getElementById('quizSection');
+      leaderboardSection.classList.add('active');
+      monsterSection.classList.remove('active');
+      quizSection.classList.remove('logged-in');
+      updateLeaderboard();
     };
   </script>
 </body>
